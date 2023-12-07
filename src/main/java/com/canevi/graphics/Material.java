@@ -1,44 +1,42 @@
 package com.canevi.graphics;
 
-import java.io.IOException;
-
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
+import com.canevi.maths.Vector3f;
 
-@Slf4j
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@RequiredArgsConstructor
+@AllArgsConstructor
 public class Material {
-	private Texture texture;
-	@Getter
-	private float width, height;
-	@Getter
-	private int textureID;
-	
-	public Material(String texturePath) {
-		try {
-			texture = TextureLoader.getTexture(texturePath, GL11.GL_NEAREST);
-			width = texture.getWidth();
-			height = texture.getHeight();
-			textureID = texture.getTextureID();
-		} catch (IOException e) {
-			log.info("Can't find texture at " + texturePath);
-		}
+	private final Texture diffusemap;
+	private final Texture normalmap;
+	private Vector3f color = new Vector3f(1, 1, 1);
+
+	public Material(String diffuseDir, boolean shouldFlip) {
+		diffusemap = TextureLoader.getTexture(diffuseDir, GL11.GL_NEAREST, shouldFlip);
+		normalmap = null;
 	}
-	
-	public Material(Texture Texture) {
-		this.texture = Texture;
-		this.width = texture.getWidth();
-		this.height = texture.getHeight();
-		this.textureID = texture.getTextureID();
+
+	public Material(String diffuseDir, String normalDir, boolean shouldFlip) {
+		diffusemap = TextureLoader.getTexture(diffuseDir, GL11.GL_NEAREST, shouldFlip);
+		normalmap = TextureLoader.getTexture(normalDir, GL11.GL_NEAREST, shouldFlip);
 	}
-	
+
 	public void destroy() {
-		GL13.glDeleteTextures(textureID);
+		GL13.glDeleteTextures(diffusemap.getTextureID());
+		if (normalmap != null) {
+			GL13.glDeleteTextures(normalmap.getTextureID());
+		}
 	}
 
 	public static Material defaultMaterial() {
-		return new Material("textures/image.png");
+		return new Material("textures/image.png", null, false);
 	}
 }

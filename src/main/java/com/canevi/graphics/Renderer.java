@@ -9,8 +9,6 @@ import com.canevi.io.Window;
 import com.canevi.maths.Matrix4f;
 import com.canevi.maths.Transform;
 import com.canevi.objects.Camera;
-import com.canevi.objects.GameObject;
-
 
 public class Renderer {
 	private Shader shader;
@@ -29,7 +27,7 @@ public class Renderer {
 		GL30.glEnableVertexAttribArray(2);
 		GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, mesh.getIbo());
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL13.glBindTexture(GL11.GL_TEXTURE_2D, mesh.getMaterial().getTextureID());
+		GL13.glBindTexture(GL11.GL_TEXTURE_2D, mesh.getMaterial().getDiffusemap().getTextureID());
 		shader.bind();
 		shader.setUniform("model", Matrix4f.transform(transform));
 		shader.setUniform("view", Matrix4f.view(camera));

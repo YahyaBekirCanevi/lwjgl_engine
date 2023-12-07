@@ -10,7 +10,6 @@ import org.lwjgl.assimp.AIMesh;
 import org.lwjgl.assimp.AIScene;
 import org.lwjgl.assimp.AIVector3D;
 import org.lwjgl.assimp.Assimp;
-
 import com.canevi.graphics.Material;
 import com.canevi.graphics.Mesh;
 import com.canevi.graphics.Vertex;
@@ -21,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ModelLoader {
-	public static Mesh loadModel(String filePath, String texturePath, int meshIndex) {
+	public static Mesh loadModel(String filePath, String texturePath, int meshIndex, boolean shouldFlip) {
 		String absolutePath = ResourceLoader.load(filePath);
 		/// aiImportFile fails on Windows if the path starts with a slash
 		if (System.getProperty("os.name").contains("Windows")) {
@@ -70,12 +69,12 @@ public class ModelLoader {
 			indicesList[i * 3 + 1] = face.mIndices().get(1);
 			indicesList[i * 3 + 2] = face.mIndices().get(2);
 		}
-		Material material = new Material(texturePath);
+		Material material = new Material(texturePath, shouldFlip);
 
 		return new Mesh(vertexList, indicesList, material);
 	}
 
-	public static List<Mesh> loadModel(String filePath, List<String> textures) {
+	public static List<Mesh> loadModel(String filePath, List<String> textures, boolean shouldFlip) {
 		String absolutePath = ResourceLoader.load(filePath);
 
 		// aiImportFile fails on Windows if the path starts with a slash
@@ -85,8 +84,8 @@ public class ModelLoader {
 		}
 		AIScene scene = Assimp.aiImportFile(absolutePath,
 				Assimp.aiProcess_GenSmoothNormals | Assimp.aiProcess_JoinIdenticalVertices);
-		//Assimp.aiProcess_JoinIdenticalVertices | Assimp.aiProcess_Triangulate
-		//Assimp.aiProcess_GenSmoothNormals | Assimp.aiProcess_JoinIdenticalVertices
+		// Assimp.aiProcess_JoinIdenticalVertices | Assimp.aiProcess_Triangulate
+		// Assimp.aiProcess_GenSmoothNormals | Assimp.aiProcess_JoinIdenticalVertices
 
 		if (scene == null) {
 			log.info("Couldn't load model at " + filePath + "\nError: " + Assimp.aiGetErrorString());
@@ -94,25 +93,33 @@ public class ModelLoader {
 		}
 
 		List<Mesh> meshes = new ArrayList<>();
+		List<Material> materials = new ArrayList<>();
 		PointerBuffer p = scene.mMeshes();
 		int meshAmount = scene.mNumMeshes();
-		log.info("Mesh Amount : " + meshAmount);
 
+		/*
+		 * if (scene.mMaterials() != null) {
+		 * for (int i = 0; i < scene.mNumMaterials(); i++) {
+		 * AIMaterial aiMaterial = AIMaterial.create(scene.mMaterials().get(i));
+		 * Material material = processMaterial(aiMaterial, filePath);
+		 * materials.add(material);
+		 * }
+		 * }
+		 */
 		for (int i = 0; i < meshAmount; i++) {
-			long address = p.get(i);
-
-			meshes.add(loadModelNew(address, textures.get(i)));
+			AIMesh aiMesh = AIMesh.create(p.get(i));
+			meshes.add(loadModelNew(aiMesh, textures.get(i), materials, shouldFlip));
 		}
 
 		return meshes;
 	}
 
-	private static Mesh loadModelNew(long address, String texturePath) {
-		AIMesh mesh = AIMesh.create(address);
-		int vertexCount = mesh.mNumVertices();
+	private static Mesh loadModelNew(AIMesh aiMesh, String texturePath, List<Material> materials, boolean shouldFlip) {
+		int vertexCount = aiMesh.mNumVertices();
+		int materialIndex = aiMesh.mMaterialIndex();
 
-		AIVector3D.Buffer vertices = mesh.mVertices();
-		AIVector3D.Buffer normals = mesh.mNormals();
+		AIVector3D.Buffer vertices = aiMesh.mVertices();
+		AIVector3D.Buffer normals = aiMesh.mNormals();
 
 		Vertex[] vertexList = new Vertex[vertexCount];
 
@@ -124,8 +131,8 @@ public class ModelLoader {
 			Vector3f meshNormal = new Vector3f(normal.x(), normal.y(), normal.z());
 
 			Vector2f meshTextureCoord = new Vector2f(0, 0);
-			if (mesh.mNumUVComponents().get(0) != 0) {
-				AIVector3D.Buffer textureCoords = mesh.mTextureCoords(0);
+			if (aiMesh.mNumUVComponents().get(0) != 0) {
+				AIVector3D.Buffer textureCoords = aiMesh.mTextureCoords(0);
 				AIVector3D texture = textureCoords.get(j);
 				meshTextureCoord.setX(texture.x());
 				meshTextureCoord.setY(texture.y());
@@ -134,8 +141,8 @@ public class ModelLoader {
 			vertexList[j] = new Vertex(meshVertex, meshNormal, meshTextureCoord);
 		}
 
-		int faceCount = mesh.mNumFaces();
-		AIFace.Buffer indices = mesh.mFaces();
+		int faceCount = aiMesh.mNumFaces();
+		AIFace.Buffer indices = aiMesh.mFaces();
 		int[] indicesList = new int[faceCount * 3];
 
 		for (int j = 0; j < faceCount; j++) {
@@ -145,7 +152,61 @@ public class ModelLoader {
 			indicesList[j * 3 + 2] = face.mIndices().get(2);
 		}
 
-		Material material = new Material(texturePath); // Update the path accordingly
+		Material material = new Material(texturePath, shouldFlip); // Update the path accordingly
+		/*
+		 * if (materialIndex >= 0 && materialIndex < materials.size()) {
+		 * material = materials.get(materialIndex);
+		 * }
+		 */
 		return new Mesh(vertexList, indicesList, material);
 	}
+
+	/*
+	 * private static Material processMaterial(AIMaterial aiMaterial, String
+	 * texturesDir) {
+	 * 
+	 * // diffuse Texture
+	 * AIString diffPath = AIString.calloc();
+	 * Assimp.aiGetMaterialTexture(aiMaterial, Assimp.aiTextureType_DIFFUSE, 0,
+	 * diffPath, (IntBuffer) null, null, null,
+	 * null, null, null);
+	 * String diffTexPath = diffPath.dataString();
+	 * 
+	 * GLTexture diffuseTexture = null;
+	 * if (diffTexPath != null && diffTexPath.length() > 0) {
+	 * diffuseTexture = new Texture(texturesDir + "/" + diffTexPath,
+	 * SamplerFilter.Trilinear);
+	 * }
+	 * 
+	 * // normal Texture
+	 * AIString normalPath = AIString.calloc();
+	 * Assimp.aiGetMaterialTexture(aiMaterial, Assimp.aiTextureType_NORMALS, 0,
+	 * normalPath, (IntBuffer) null, null,
+	 * null, null, null, null);
+	 * String normalTexPath = normalPath.dataString();
+	 * 
+	 * GLTexture normalTexture = null;
+	 * if (normalTexPath != null && normalTexPath.length() > 0) {
+	 * normalTexture = new TextureImage2D(texturesDir + "/" + normalTexPath,
+	 * SamplerFilter.Trilinear);
+	 * }
+	 * 
+	 * AIColor4D color = AIColor4D.create();
+	 * 
+	 * Vec3f diffuseColor = null;
+	 * int result = Assimp.aiGetMaterialColor(aiMaterial,
+	 * Assimp.AI_MATKEY_COLOR_AMBIENT, Assimp.aiTextureType_NONE, 0,
+	 * color);
+	 * if (result == 0) {
+	 * diffuseColor = new Vec3f(color.r(), color.g(), color.b());
+	 * }
+	 * 
+	 * Material material = new Material();
+	 * material.setDiffusemap(diffuseTexture);
+	 * material.setNormalmap(normalTexture);
+	 * material.setColor(diffuseColor);
+	 * 
+	 * return material;
+	 * }
+	 */
 }

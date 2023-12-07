@@ -13,23 +13,24 @@ import com.canevi.maths.Vector3f;
 public class MeshExamples {
     public static List<Mesh> watcher() {
         String path = "sf/sea-keep-lonely-watcher";
-        List<String> textures = Stream.of("/textures/texture_building.jpeg", 
-            "/textures/texture_environment.jpg", "/textures/texture_sand.jpeg", 
-            "/textures/texture_sea.jpeg", "/textures/texture_sky.jpeg")
-            .map(e -> path + e).collect(java.util.stream.Collectors.toList());
-        return ModelLoader.loadModel(path + "/source/Stronghold.fbx", textures);
+        List<String> textures = Stream.of("/textures/texture_building.jpeg",
+                "/textures/texture_environment.jpg", "/textures/texture_sand.jpeg",
+                "/textures/texture_sea.jpeg", "/textures/texture_sky.jpeg")
+                .map(e -> path + e).collect(java.util.stream.Collectors.toList());
+        return ModelLoader.loadModel(path + "/source/Stronghold.fbx", textures, true);
     }
+
     public static Mesh watcherPart(int meshIndex, int textureIndex) {
         String path = "sf/sea-keep-lonely-watcher";
-        List<String> textures = Stream.of("/textures/texture_building.jpeg", 
-            "/textures/texture_environment.jpg", "/textures/texture_sand.jpeg", 
-            "/textures/texture_sea.jpeg", "/textures/texture_sky.jpeg")
-            .map(e -> path + e).collect(java.util.stream.Collectors.toList());
-        return ModelLoader.loadModel(path + "/source/Stronghold.fbx", textures.get(textureIndex), meshIndex);
+        List<String> textures = Stream.of("/textures/texture_building.jpeg",
+                "/textures/texture_environment.jpg", "/textures/texture_sand.jpeg",
+                "/textures/texture_sea.jpeg", "/textures/texture_sky.jpeg")
+                .map(e -> path + e).collect(java.util.stream.Collectors.toList());
+        return ModelLoader.loadModel(path + "/source/Stronghold.fbx", textures.get(textureIndex), meshIndex, true);
     }
 
     public static Mesh dragon() {
-        return ModelLoader.loadModel("models/dragon.obj", "textures/image.png",0);
+        return ModelLoader.loadModel("models/dragon.obj", "textures/image.png", 0, true);
     }
 
     public static Mesh generatePlane(String texturePath) {
@@ -45,7 +46,7 @@ public class MeshExamples {
         }, new int[] {
                 0, 1, 2,
                 0, 3, 2
-        }, new Material(texturePath));
+        }, new Material(texturePath, false));
     }
 
     public static Mesh generateCube(String texturePath) {
@@ -109,6 +110,6 @@ public class MeshExamples {
                 // Bottom face
                 20, 21, 23,
                 23, 21, 22
-        }, new Material(texturePath));
+        }, new Material(texturePath, false));
     }
 }

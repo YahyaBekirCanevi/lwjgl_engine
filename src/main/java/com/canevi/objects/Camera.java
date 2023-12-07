@@ -17,12 +17,22 @@ public class Camera {
 	private float moveSpeed = 0.05f, mouseSensitivity = 0.15f, distance = 2.0f;
 	private float horizontalAngle = 0, verticalAngle = 0;
 	private double oldMouseX = 0, oldMouseY = 0, newMouseX, newMouseY;
+	@Getter
+	private boolean onFocus = false;
+
+	public void setOnFocus(boolean onFocus) {
+		this.onFocus = onFocus;
+		oldMouseX = Input.getMouseX();
+		oldMouseY = Input.getMouseY();
+	}
 
 	public Camera(Transform transform) {
 		this.transform = transform;
 	}
 
 	public void update() {
+		if (!onFocus)
+			return;
 		newMouseX = Input.getMouseX();
 		newMouseY = Input.getMouseY();
 
@@ -63,6 +73,8 @@ public class Camera {
 	}
 
 	public void update(GameObject object) {
+		if (!onFocus)
+			return;
 		newMouseX = Input.getMouseX();
 		newMouseY = Input.getMouseY();
 
