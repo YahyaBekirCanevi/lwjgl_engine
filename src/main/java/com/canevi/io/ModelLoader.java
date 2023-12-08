@@ -2,6 +2,7 @@ package com.canevi.io;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.EnumMap;
 import java.util.List;
 
 import org.lwjgl.PointerBuffer;
@@ -11,6 +12,7 @@ import org.lwjgl.assimp.AIScene;
 import org.lwjgl.assimp.AIVector3D;
 import org.lwjgl.assimp.Assimp;
 import com.canevi.graphics.Material;
+import com.canevi.graphics.Material.TextureType;
 import com.canevi.graphics.Mesh;
 import com.canevi.graphics.Vertex;
 import com.canevi.maths.Vector2f;
@@ -69,7 +71,10 @@ public class ModelLoader {
 			indicesList[i * 3 + 1] = face.mIndices().get(1);
 			indicesList[i * 3 + 2] = face.mIndices().get(2);
 		}
-		Material material = new Material(texturePath, shouldFlip);
+
+		EnumMap<TextureType, String> enumMap = new EnumMap<>(TextureType.class);
+		enumMap.put(TextureType.DIFFUSE, texturePath);
+		Material material = new Material(shouldFlip, enumMap);
 
 		return new Mesh(vertexList, indicesList, material);
 	}
@@ -116,7 +121,7 @@ public class ModelLoader {
 
 	private static Mesh loadModelNew(AIMesh aiMesh, String texturePath, List<Material> materials, boolean shouldFlip) {
 		int vertexCount = aiMesh.mNumVertices();
-		int materialIndex = aiMesh.mMaterialIndex();
+		// int materialIndex = aiMesh.mMaterialIndex();
 
 		AIVector3D.Buffer vertices = aiMesh.mVertices();
 		AIVector3D.Buffer normals = aiMesh.mNormals();
@@ -144,19 +149,7 @@ public class ModelLoader {
 		int faceCount = aiMesh.mNumFaces();
 		AIFace.Buffer indices = aiMesh.mFaces();
 		List<Integer> indicesList = new ArrayList<>();
-		/*
-		 * int[] indicesList = new int[faceCount * 3];
-		 * 
-		 * for (int j = 0; j < faceCount; j++) {
-		 * AIFace face = indices.get(j);
-		 * indicesList[j * 3 + 0] = face.mIndices().get(0);
-		 * indicesList[j * 3 + 1] = face.mIndices().get(1);
-		 * indicesList[j * 3 + 2] = face.mIndices().get(2);
-		 * if (face.mIndices().array().length == 4) {
-		 * indicesList[j * 3 + 3] = face.mIndices().get(3);
-		 * }
-		 * }
-		 */
+
 		for (int j = 0; j < faceCount; j++) {
 			AIFace face = indices.get(j);
 			indicesList.add(face.mIndices().get(0));
@@ -176,7 +169,9 @@ public class ModelLoader {
 			indicesArray[j] = indicesList.get(j);
 		}
 
-		Material material = new Material(texturePath, shouldFlip); // Update the path accordingly
+		EnumMap<TextureType, String> enumMap = new EnumMap<>(TextureType.class);
+		enumMap.put(TextureType.DIFFUSE, texturePath);
+		Material material = new Material(shouldFlip, enumMap); // Update the path accordingly
 		/*
 		 * if (materialIndex >= 0 && materialIndex < materials.size()) {
 		 * material = materials.get(materialIndex);

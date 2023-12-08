@@ -1,6 +1,6 @@
 package com.canevi.graphics;
 
-import org.lwjgl.opengl.GL11;
+import java.util.EnumMap;
 import org.lwjgl.opengl.GL13;
 
 import com.canevi.maths.Vector3f;
@@ -15,18 +15,24 @@ import lombok.Setter;
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class Material {
-	private final Texture diffusemap;
-	private final Texture normalmap;
-	private Vector3f color = new Vector3f(1, 1, 1);
-
-	public Material(String diffuseDir, boolean shouldFlip) {
-		diffusemap = TextureLoader.getTexture(diffuseDir, GL11.GL_NEAREST, shouldFlip);
-		normalmap = null;
+	public static enum TextureType {
+		DIFFUSE, NORMAL, EMMISION
 	}
 
-	public Material(String diffuseDir, String normalDir, boolean shouldFlip) {
-		diffusemap = TextureLoader.getTexture(diffuseDir, GL11.GL_NEAREST, shouldFlip);
-		normalmap = TextureLoader.getTexture(normalDir, GL11.GL_NEAREST, shouldFlip);
+	private final Texture diffusemap;
+	private final Texture normalmap;
+	private final Texture emmisionmap;
+	private Vector3f color = new Vector3f(1, 1, 1);
+	private TextureLoader.FilterType filterType = TextureLoader.FilterType.LINEAR;
+	private TextureLoader.WrapType wrapType = TextureLoader.WrapType.REPEAT;
+
+	public Material(boolean shouldFlip, EnumMap<TextureType, String> properties) {
+		String diffuse = properties.getOrDefault(TextureType.DIFFUSE, null);
+		diffusemap = diffuse == null ? null : TextureLoader.getTexture(diffuse, shouldFlip, wrapType, filterType);
+		String normal = properties.getOrDefault(TextureType.NORMAL, null);
+		normalmap = normal == null ? null : TextureLoader.getTexture(normal, shouldFlip, wrapType, filterType);
+		String emmision = properties.getOrDefault(TextureType.EMMISION, null);
+		emmisionmap = emmision == null ? null : TextureLoader.getTexture(emmision, shouldFlip, wrapType, filterType);
 	}
 
 	public void destroy() {
@@ -37,6 +43,8 @@ public class Material {
 	}
 
 	public static Material defaultMaterial() {
-		return new Material("textures/image.png", null, false);
+		EnumMap<TextureType, String> enumMap = new EnumMap<>(TextureType.class);
+		enumMap.put(TextureType.DIFFUSE, "textures/image.png");
+		return new Material(false, new EnumMap<>(TextureType.class));
 	}
 }

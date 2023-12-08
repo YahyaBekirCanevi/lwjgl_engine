@@ -3,9 +3,6 @@ package com.canevi.graphics;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
-import java.util.Arrays;
-import java.util.List;
-
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
@@ -20,22 +17,50 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class TextureLoader {
-    private static final List<Integer> mFilters = Arrays.asList(GL11.GL_NEAREST, GL11.GL_LINEAR);
-    private static final List<Integer> mWraps = Arrays.asList(GL11.GL_REPEAT, GL14.GL_MIRRORED_REPEAT,
-            GL12.GL_CLAMP_TO_EDGE,
-            GL13.GL_CLAMP_TO_BORDER);
+
+    public static enum FilterType {
+        NEAREST(GL11.GL_NEAREST), LINEAR(GL11.GL_LINEAR);
+
+        private int value;
+
+        public int getValue() {
+            return value;
+        }
+
+        FilterType(int value) {
+            this.value = value;
+        }
+    }
+
+    public static enum WrapType {
+        REPEAT(GL11.GL_REPEAT), MIRRORED_REPEAT(GL14.GL_MIRRORED_REPEAT),
+        CLAMP_TO_EDGE(GL12.GL_CLAMP_TO_EDGE), CLAMP_TO_BORDER(GL13.GL_CLAMP_TO_BORDER);
+
+        private int value;
+
+        public int getValue() {
+            return value;
+        }
+
+        WrapType(int value) {
+            this.value = value;
+        }
+    }
+
     private static final int target = GL11.GL_TEXTURE_2D;
 
-    public static Texture getTexture(String path, int filtering, boolean shouldFlip) {
+    public static Texture getTexture(String path, boolean shouldFlip,
+            TextureLoader.WrapType wrapType, TextureLoader.FilterType filterType) {
         try {
-            return getTextureEx(path, filtering, shouldFlip);
+            return getTextureEx(path, shouldFlip, wrapType, filterType);
         } catch (IOException e) {
             log.info("Failed to load texture: " + path);
         }
         return null;
     }
 
-    public static Texture getTextureEx(String path, int filtering, boolean shouldFlip) throws IOException {
+    public static Texture getTextureEx(String path, boolean shouldFlip,
+            TextureLoader.WrapType wrapType, TextureLoader.FilterType filterType) throws IOException {
         int textureID, width, height, channel;
 
         ByteBuffer imageBuffer;
@@ -57,11 +82,13 @@ public class TextureLoader {
             }
 
             textureID = createTextureID();
+            int wrap = wrapType.getValue();
+            int filter = filterType.getValue();
             GL11.glBindTexture(target, textureID);
-            GL11.glTexParameteri(target, GL11.GL_TEXTURE_WRAP_S, mWraps.get(0));
-            GL11.glTexParameteri(target, GL11.GL_TEXTURE_WRAP_T, mWraps.get(0));
-            GL11.glTexParameteri(target, GL11.GL_TEXTURE_MIN_FILTER, filtering);
-            GL11.glTexParameteri(target, GL11.GL_TEXTURE_MAG_FILTER, filtering);
+            GL11.glTexParameteri(target, GL11.GL_TEXTURE_WRAP_S, wrap);
+            GL11.glTexParameteri(target, GL11.GL_TEXTURE_WRAP_T, wrap);
+            GL11.glTexParameteri(target, GL11.GL_TEXTURE_MIN_FILTER, filter);
+            GL11.glTexParameteri(target, GL11.GL_TEXTURE_MAG_FILTER, filter);
 
             width = w.get();
             height = h.get();

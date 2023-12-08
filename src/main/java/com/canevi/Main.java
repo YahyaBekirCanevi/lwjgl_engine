@@ -34,7 +34,8 @@ public class Main implements Runnable {
 	public void init() {
 		window = new Window(WIDTH, HEIGHT, "Game");
 		window.setBackgroundColor(0.1f, 0.2f, 0.3f);
-		camera = new Camera(new Transform(new Vector3f(0f, 0f, -100f), new Vector3f(0f, 90f, 0f)));
+		camera = new Camera(new Transform(new Vector3f(0f, 0f, -50f), new Vector3f(0f, 90f, 0f)));
+		camera.setMoveSpeed(.1f);
 
 		window.create();
 
@@ -47,6 +48,7 @@ public class Main implements Runnable {
 		// meshList.add(MeshExamples.dragon());
 		// meshList.add(MeshExamples.generateCube("textures/wooden-box.png"));
 		object = new GameObject(new Transform(Vector3f.zero(), new Vector3f(90f, 0f, 0f)), meshList, window, shader);
+		object.getTransform().scale(.1f);
 		object.create();
 	}
 
