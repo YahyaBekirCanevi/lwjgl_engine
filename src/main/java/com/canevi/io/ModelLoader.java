@@ -143,13 +143,37 @@ public class ModelLoader {
 
 		int faceCount = aiMesh.mNumFaces();
 		AIFace.Buffer indices = aiMesh.mFaces();
-		int[] indicesList = new int[faceCount * 3];
-
+		List<Integer> indicesList = new ArrayList<>();
+		/*
+		 * int[] indicesList = new int[faceCount * 3];
+		 * 
+		 * for (int j = 0; j < faceCount; j++) {
+		 * AIFace face = indices.get(j);
+		 * indicesList[j * 3 + 0] = face.mIndices().get(0);
+		 * indicesList[j * 3 + 1] = face.mIndices().get(1);
+		 * indicesList[j * 3 + 2] = face.mIndices().get(2);
+		 * if (face.mIndices().array().length == 4) {
+		 * indicesList[j * 3 + 3] = face.mIndices().get(3);
+		 * }
+		 * }
+		 */
 		for (int j = 0; j < faceCount; j++) {
 			AIFace face = indices.get(j);
-			indicesList[j * 3 + 0] = face.mIndices().get(0);
-			indicesList[j * 3 + 1] = face.mIndices().get(1);
-			indicesList[j * 3 + 2] = face.mIndices().get(2);
+			indicesList.add(face.mIndices().get(0));
+			indicesList.add(face.mIndices().get(1));
+			indicesList.add(face.mIndices().get(2));
+			if (face.mNumIndices() == 4) {
+				indicesList.add(face.mIndices().get(0));
+				indicesList.add(face.mIndices().get(1));
+				indicesList.add(face.mIndices().get(3));
+				indicesList.add(face.mIndices().get(1));
+				indicesList.add(face.mIndices().get(2));
+				indicesList.add(face.mIndices().get(3));
+			}
+		}
+		int[] indicesArray = new int[indicesList.size()];
+		for (int j = 0; j < indicesList.size(); j++) {
+			indicesArray[j] = indicesList.get(j);
 		}
 
 		Material material = new Material(texturePath, shouldFlip); // Update the path accordingly
@@ -158,7 +182,7 @@ public class ModelLoader {
 		 * material = materials.get(materialIndex);
 		 * }
 		 */
-		return new Mesh(vertexList, indicesList, material);
+		return new Mesh(vertexList, indicesArray, material);
 	}
 
 	/*

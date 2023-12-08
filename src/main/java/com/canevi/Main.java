@@ -34,7 +34,7 @@ public class Main implements Runnable {
 	public void init() {
 		window = new Window(WIDTH, HEIGHT, "Game");
 		window.setBackgroundColor(0.1f, 0.2f, 0.3f);
-		camera = new Camera(new Transform(new Vector3f(0f, 0f, 1f), new Vector3f(0f, 90f, 0f)));
+		camera = new Camera(new Transform(new Vector3f(0f, 0f, -100f), new Vector3f(0f, 90f, 0f)));
 
 		window.create();
 
