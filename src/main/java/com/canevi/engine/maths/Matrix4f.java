@@ -2,6 +2,8 @@ package com.canevi.engine.maths;
 
 import java.util.Arrays;
 
+import org.lwjgl.assimp.AIMatrix4x4;
+
 import com.canevi.engine.objects.Camera;
 
 public class Matrix4f extends Matrixf {
@@ -122,6 +124,13 @@ public class Matrix4f extends Matrixf {
 		return result;
 	}
 
+	public Vector3f translateVector3f(Vector3f vector) {
+		return new Vector3f(
+				get(0, 0) * vector.getX() + get(0, 1) * vector.getY() + get(0, 2) * vector.getZ() + get(0, 3),
+				get(1, 0) * vector.getX() + get(1, 1) * vector.getY() + get(1, 2) * vector.getZ() + get(1, 3),
+				get(2, 0) * vector.getX() + get(2, 1) * vector.getY() + get(2, 2) * vector.getZ() + get(2, 3));
+	}
+
 	public static Matrix4f projection(float fov, float aspect, float near, float far) {
 		Matrix4f result = Matrix4f.identity();
 
@@ -184,5 +193,28 @@ public class Matrix4f extends Matrixf {
 						get(0, 0) * direction.getX() + get(0, 1) * direction.getY() + get(0, 2) * direction.getZ(),
 						get(1, 0) * direction.getX() + get(1, 1) * direction.getY() + get(1, 2) * direction.getZ(),
 						get(2, 0) * direction.getX() + get(2, 1) * direction.getY() + get(2, 2) * direction.getZ());
+	}
+
+	public static Matrix4f fromAssimpMatrix4x4(AIMatrix4x4 mTransformation) {
+		Matrix4f result = new Matrix4f();
+
+		result.set(0, 0, mTransformation.a1());
+		result.set(1, 0, mTransformation.b1());
+		result.set(2, 0, mTransformation.c1());
+		result.set(3, 0, mTransformation.d1());
+		result.set(0, 1, mTransformation.a2());
+		result.set(1, 1, mTransformation.b2());
+		result.set(2, 1, mTransformation.c2());
+		result.set(3, 1, mTransformation.d2());
+		result.set(0, 2, mTransformation.a3());
+		result.set(1, 2, mTransformation.b3());
+		result.set(2, 2, mTransformation.c3());
+		result.set(3, 2, mTransformation.d3());
+		result.set(0, 3, mTransformation.a4());
+		result.set(1, 3, mTransformation.b4());
+		result.set(2, 3, mTransformation.c4());
+		result.set(3, 3, mTransformation.d4());
+
+		return result;
 	}
 }

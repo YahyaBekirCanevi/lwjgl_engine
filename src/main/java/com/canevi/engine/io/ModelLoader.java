@@ -7,6 +7,7 @@ import java.util.List;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.assimp.AIFace;
 import org.lwjgl.assimp.AIMesh;
+import org.lwjgl.assimp.AINode;
 import org.lwjgl.assimp.AIScene;
 import org.lwjgl.assimp.AIVector3D;
 import org.lwjgl.assimp.Assimp;
@@ -17,6 +18,7 @@ import com.canevi.engine.graphics.Material;
 import com.canevi.engine.graphics.Mesh;
 import com.canevi.engine.graphics.Texture;
 import com.canevi.engine.graphics.Vertex;
+import com.canevi.engine.maths.Matrix4f;
 import com.canevi.engine.maths.Vector2f;
 import com.canevi.engine.maths.Vector3f;
 
@@ -106,8 +108,7 @@ public class ModelLoader {
 
 		List<Mesh> meshes = new ArrayList<>();
 		List<Material> materials = new ArrayList<>();
-		PointerBuffer p = scene.mMeshes();
-		int meshAmount = scene.mNumMeshes();
+		AINode rootNode = scene.mRootNode();
 
 		/*
 		 * if (scene.mMaterials() != null) {
@@ -118,15 +119,35 @@ public class ModelLoader {
 		 * }
 		 * }
 		 */
-		for (int i = 0; i < meshAmount; i++) {
-			AIMesh aiMesh = AIMesh.create(p.get(i));
-			meshes.add(loadModelNew(aiMesh, textures.get(i), materials, shouldFlip));
-		}
+		// for (int i = 0; i < scene.mNumMeshes(); i++) {
+		// AIMesh aiMesh = AIMesh.create(scene.mMeshes().get(i));
+		// meshes.add(processMesh(aiMesh, textures.get(i), materials, shouldFlip));
+		// }
+		processNode(rootNode, scene, meshes, materials, textures, shouldFlip, Matrix4f.identity());
 
 		return meshes;
 	}
 
-	private static Mesh loadModelNew(AIMesh aiMesh, String texturePath, List<Material> materials, boolean shouldFlip) {
+	private static void processNode(AINode node, AIScene scene, List<Mesh> meshes, List<Material> materials,
+			List<String> textures, boolean shouldFlip, Matrix4f parentTransform) {
+		Matrix4f currentTransform = parentTransform.multiply(Matrix4f.fromAssimpMatrix4x4(node.mTransformation()));
+
+		// Process each mesh in the current node
+		for (int i = 0; i < node.mNumMeshes(); i++) {
+			int meshIndex = node.mMeshes().get(i);
+			AIMesh aiMesh = AIMesh.create(scene.mMeshes().get(meshIndex));
+			meshes.add(processMesh(aiMesh, textures.get(meshIndex), materials, shouldFlip, currentTransform));
+		}
+
+		// Recursively process child nodes
+		for (int i = 0; i < node.mNumChildren(); i++) {
+			AINode childNode = AINode.create(node.mChildren().get(i));
+			processNode(childNode, scene, meshes, materials, textures, shouldFlip, currentTransform);
+		}
+	}
+
+	private static Mesh processMesh(AIMesh aiMesh, String texturePath, List<Material> materials,
+			boolean shouldFlip, Matrix4f transformMatrix) {
 		int vertexCount = aiMesh.mNumVertices();
 		// int materialIndex = aiMesh.mMaterialIndex();
 
@@ -138,6 +159,7 @@ public class ModelLoader {
 		for (int j = 0; j < vertexCount; j++) {
 			AIVector3D vertex = vertices.get(j);
 			Vector3f meshVertex = new Vector3f(vertex.x(), vertex.y(), vertex.z());
+			meshVertex = transformMatrix.translateVector3f(meshVertex);
 
 			AIVector3D normal = normals.get(j);
 			Vector3f meshNormal = new Vector3f(normal.x(), normal.y(), normal.z());

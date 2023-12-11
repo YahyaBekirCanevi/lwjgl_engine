@@ -24,7 +24,7 @@ public class Camera extends TObject {
 	public static Camera main() {
 		if (mainCamera == null) {
 			mainCamera = new Camera(null,
-					new Transform(new Vector3f(0f, 0f, 1f), new Vector3f(0f, 90f, 0f)));
+					new Transform(new Vector3f(0f, 0f, -50f), new Vector3f(0f, 90f, 0f)));
 		}
 		return mainCamera;
 	}
