@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.lwjgl.PointerBuffer;
 import org.lwjgl.assimp.AIFace;
 import org.lwjgl.assimp.AIMesh;
 import org.lwjgl.assimp.AINode;
@@ -26,66 +25,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ModelLoader {
-	/*
-	 * public static Mesh loadModel(String filePath, String texturePath, int
-	 * meshIndex, boolean shouldFlip) {
-	 * String absolutePath = ResourceLoader.load(filePath);
-	 * /// aiImportFile fails on Windows if the path starts with a slash
-	 * if (System.getProperty("os.name").contains("Windows")) {
-	 * if (absolutePath.startsWith("/"))
-	 * absolutePath = absolutePath.substring(1);
-	 * }
-	 * AIScene scene = Assimp.aiImportFile(absolutePath,
-	 * Assimp.aiProcess_JoinIdenticalVertices | Assimp.aiProcess_Triangulate);
-	 * 
-	 * if (scene == null) {
-	 * log.info("Couldn't load model at " + filePath + "\nError: " +
-	 * Assimp.aiGetErrorString());
-	 * return null;
-	 * }
-	 * AIMesh mesh = AIMesh.create(scene.mMeshes().get(meshIndex));
-	 * int vertexCount = mesh.mNumVertices();
-	 * 
-	 * AIVector3D.Buffer vertices = mesh.mVertices();
-	 * AIVector3D.Buffer normals = mesh.mNormals();
-	 * 
-	 * Vertex[] vertexList = new Vertex[vertexCount];
-	 * 
-	 * for (int i = 0; i < vertexCount; i++) {
-	 * AIVector3D vertex = vertices.get(i);
-	 * Vector3f meshVertex = new Vector3f(vertex.x(), vertex.y(), vertex.z());
-	 * 
-	 * AIVector3D normal = normals.get(i);
-	 * Vector3f meshNormal = new Vector3f(normal.x(), normal.y(), normal.z());
-	 * 
-	 * Vector2f meshTextureCoord = new Vector2f(0, 0);
-	 * if (mesh.mNumUVComponents().get(0) != 0) {
-	 * AIVector3D texture = mesh.mTextureCoords(0).get(i);
-	 * meshTextureCoord.setX(texture.x());
-	 * meshTextureCoord.setY(texture.y());
-	 * }
-	 * 
-	 * vertexList[i] = new Vertex(meshVertex, meshNormal, meshTextureCoord);
-	 * }
-	 * 
-	 * int faceCount = mesh.mNumFaces();
-	 * AIFace.Buffer indices = mesh.mFaces();
-	 * int[] indicesList = new int[faceCount * 3];
-	 * 
-	 * for (int i = 0; i < faceCount; i++) {
-	 * AIFace face = indices.get(i);
-	 * indicesList[i * 3 + 0] = face.mIndices().get(0);
-	 * indicesList[i * 3 + 1] = face.mIndices().get(1);
-	 * indicesList[i * 3 + 2] = face.mIndices().get(2);
-	 * }
-	 * 
-	 * EnumMap<TextureType, String> enumMap = new EnumMap<>(TextureType.class);
-	 * enumMap.put(TextureType.DIFFUSE, texturePath);
-	 * Material material = new Material(shouldFlip, enumMap);
-	 * 
-	 * return new Mesh(vertexList, indicesList, material);
-	 * }
-	 */
 
 	public static List<Mesh> loadModel(String filePath, List<String> textures, boolean shouldFlip) {
 		String absolutePath = ResourceLoader.load(filePath);
