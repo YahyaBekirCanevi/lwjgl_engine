@@ -4,7 +4,8 @@ import java.util.Arrays;
 
 public class Matrixf {
     private float[] elements;
-    private int m, n;
+    private final int m;
+    private final int n;
 
     public Matrixf(int m, int n) {
         this.m = m;

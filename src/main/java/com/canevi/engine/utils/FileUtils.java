@@ -5,20 +5,23 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 public class FileUtils {
 	public static String loadAsString(String path) {
 		StringBuilder result = new StringBuilder();
 		
 		ClassLoader classLoader = FileUtils.class.getClassLoader();
-		try (InputStream is = classLoader.getResourceAsStream(path);
-				InputStreamReader streamReader = new InputStreamReader(is, "UTF-8");
-				BufferedReader reader = new BufferedReader(streamReader)) {
-			String line = "";
-			while ((line = reader.readLine()) != null) {
-				result.append(line).append("\n");
-			}
-		} catch (IOException e) {
+		try (InputStream is = classLoader.getResourceAsStream(path)) {
+            assert is != null;
+            try (InputStreamReader streamReader = new InputStreamReader(is, StandardCharsets.UTF_8);
+                 BufferedReader reader = new BufferedReader(streamReader)) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    result.append(line).append("\n");
+                }
+            }
+        } catch (IOException e) {
 			throw new IllegalStateException(e.getMessage());
 		}
 
@@ -31,7 +34,8 @@ public class FileUtils {
 		ClassLoader classLoader = FileUtils.class.getClassLoader();
 		try (InputStream is = classLoader.getResourceAsStream(fileName)) {
 			// Start with a reasonable size or use a minimum
-			int bufferSize = Math.min(1024, is.available());
+            assert is != null;
+            int bufferSize = Math.min(1024, is.available());
 			byte[] buffer = new byte[bufferSize];
 			int bytesRead;
 

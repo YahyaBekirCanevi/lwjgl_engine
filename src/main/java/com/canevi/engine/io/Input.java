@@ -1,5 +1,6 @@
 package com.canevi.engine.io;
 
+import lombok.Getter;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWKeyCallback;
@@ -11,6 +12,7 @@ import com.canevi.engine.maths.Vector2f;
 public class Input {
 	private static boolean[] keys = new boolean[GLFW.GLFW_KEY_LAST];
 	private static boolean[] buttons = new boolean[GLFW.GLFW_MOUSE_BUTTON_LAST];
+	@Getter
 	private static Vector2f mouse = new Vector2f(0, 0);
 	private static Vector2f scroll = new Vector2f(0, 0);
 	private static Window window;
@@ -67,14 +69,6 @@ public class Input {
 		mouseMove.free();
 		mouseButtons.free();
 		mouseScroll.free();
-	}
-
-	public static Vector2f getMouse() {
-		return mouse;
-	}
-
-	public static Vector2f getScroll() {
-		return scroll;
 	}
 
 	public GLFWKeyCallback getKeyboardCallback() {

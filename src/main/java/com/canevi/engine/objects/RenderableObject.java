@@ -8,8 +8,8 @@ import lombok.Getter;
 
 @Getter
 public class RenderableObject extends TObject {
-    private Mesh mesh;
-    private Renderer renderer;
+    private final Mesh mesh;
+    private final Renderer renderer;
 
     public RenderableObject(TObject parent, Transform transform, Mesh mesh, Renderer renderer) {
         super(transform);
@@ -18,7 +18,6 @@ public class RenderableObject extends TObject {
     }
 
     public void create() {
-        // Playground.getInstance().addRenderableObject(this);
         mesh.create();
     }
 

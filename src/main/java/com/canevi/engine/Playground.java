@@ -18,15 +18,13 @@ public class Playground extends ThreadObject implements Runnable {
     }
 
     private Window window;
-    private Thread thread;
     private ModelImport modelImport;
-    private final int WIDTH = 1280, HEIGHT = 760;
 
     public static List<ThreadObject> objects = new ArrayList<>();
     public static List<RenderableObject> renderables = new ArrayList<>();
 
     public void start() {
-        thread = new Thread(this, name);
+        Thread thread = new Thread(this, name);
         thread.start();
     }
 
@@ -45,6 +43,8 @@ public class Playground extends ThreadObject implements Runnable {
 
     @Override
     public void onStart() {
+        int WIDTH = 1280;
+        int HEIGHT = 760;
         window = new Window(WIDTH, HEIGHT, name);
         window.setBackgroundColor(0.1f, 0.2f, 0.3f);
         window.create();
@@ -60,11 +60,11 @@ public class Playground extends ThreadObject implements Runnable {
     public void onUpdate() {
         if (window.shouldClose()) {
             interrupt();
-            objects.forEach(threadObject -> threadObject.interrupt());
+            objects.forEach(ThreadObject::interrupt);
             return;
         }
         window.update();
-        renderables.forEach(renderableObject -> renderableObject.render(Camera.main()));
+        renderables.forEach(renderableObject -> renderableObject.render(Camera.getMainCamera()));
         objects.forEach(ThreadObject::loop);
         window.swapBuffers();
         playgroundControls();
@@ -73,7 +73,7 @@ public class Playground extends ThreadObject implements Runnable {
     @Override
     public void onDestroy() {
         renderables.forEach(RenderableObject::destroy);
-        objects.stream().forEach(ThreadObject::destroy);
+        objects.forEach(ThreadObject::destroy);
         objects.clear();
         renderables.clear();
         window.destroy();

@@ -113,15 +113,11 @@ public class Matrix4f extends Matrixf {
 	}
 
 	public static Matrix4f transform(Transform transform) {
-		Matrix4f result = Matrix4f.identity();
-
 		Matrix4f translationMatrix = Matrix4f.translate(transform.getPosition());
 		Matrix4f rotationMatrix = Matrix4f.rotate(transform.getRotation());
 		Matrix4f scaleMatrix = Matrix4f.scale(transform.getScale());
 
-		result = Matrix4f.multiply(translationMatrix, Matrix4f.multiply(rotationMatrix, scaleMatrix));
-
-		return result;
+		return Matrix4f.multiply(translationMatrix, Matrix4f.multiply(rotationMatrix, scaleMatrix));
 	}
 
 	public Vector3f translateVector3f(Vector3f vector) {
@@ -148,15 +144,11 @@ public class Matrix4f extends Matrixf {
 	}
 
 	public static Matrix4f view(Camera camera) {
-		Matrix4f result = Matrix4f.identity();
-
 		Matrix4f translationMatrix = Matrix4f.translate(camera.getTransform().getPosition().inverse());
 
 		Matrix4f rotationMatrix = Matrix4f.rotate(camera.getTransform().getRotation());
 
-		result = Matrix4f.multiply(translationMatrix, rotationMatrix);
-
-		return result;
+		return Matrix4f.multiply(translationMatrix, rotationMatrix);
 	}
 
 	public static Matrix4f multiply(Matrix4f matrix, Matrix4f other) {

@@ -51,12 +51,31 @@ public class Vector3f {
 	public static Vector3f forward() {
 		return new Vector3f(0, 0, 1);
 	}
+	/**
+	 * @return new Vector3f(0, -1, 0);
+	 */
+	public static Vector3f down() {
+		return new Vector3f(0, -1, 0);
+	}
+
+	/**
+	 * @return new Vector3f(-1, 0, 0);
+	 */
+	public static Vector3f left() {
+		return new Vector3f(-1, 0, 0);
+	}
+
+	/**
+	 * @return new Vector3f(0, 0, -1);
+	 */
+	public static Vector3f back() {
+		return new Vector3f(0, 0, -1);
+	}
 
 	/**
 	 * The method creates a new Vector3f object with the negation of the input
 	 * vector's x, y, and z components.
 	 * 
-	 * @param vector
 	 * @return new Vector3f(-vector.getX(), -vector.getY(), -vector.getZ());
 	 */
 	public Vector3f inverse() {
@@ -83,7 +102,7 @@ public class Vector3f {
 		return (float) Math.sqrt(x * x + y * y + z * z);
 	}
 
-	public Vector3f normalize() {
+	public Vector3f normalized() {
 		float len = length();
 		return divide(Vector3f.one().scale(len));
 	}
@@ -132,6 +151,16 @@ public class Vector3f {
 		if (vector1 == null || vector2 == null)
 			return 0f;
 		return vector1.getX() * vector2.getX() + vector1.getY() * vector2.getY() + vector1.getZ() * vector2.getZ();
+	}
+	public static Vector3f cross(Vector3f vector1, Vector3f vector2) {
+		float x = vector1.getY() * vector2.getZ() - vector1.getZ() * vector2.getY();
+		float y = vector1.getZ() * vector2.getX() - vector1.getX() * vector2.getZ();
+		float z = vector1.getX() * vector2.getY() - vector1.getY() * vector2.getX();
+		return new Vector3f(x, y, z);
+	}
+	public static Vector3f projectOnPlane(Vector3f vector, Vector3f normal) {
+		float dotProduct = vector.dot(normal);
+		return Vector3f.subtract(vector, normal.scale(dotProduct));
 	}
 
 	public static Vector3f nonNull(Vector3f vector) {

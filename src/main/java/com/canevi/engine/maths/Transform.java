@@ -9,7 +9,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Transform {
     private Vector3f position, rotation, scale;
-
     public Transform(Vector3f position) {
         this.position = position;
         this.rotation = Vector3f.zero();
@@ -23,15 +22,15 @@ public class Transform {
     }
 
     public Vector3f forward() {
-        return Matrix4f.transform(this).getDirectionVector(Vector3f.forward()).normalize();
+        return Matrix4f.transform(this).getDirectionVector(Vector3f.forward()).normalized();
     }
 
     public Vector3f right() {
-        return Matrix4f.transform(this).getDirectionVector(Vector3f.right()).normalize();
+        return Matrix4f.transform(this).getDirectionVector(Vector3f.right()).normalized();
     }
 
     public Vector3f up() {
-        return Matrix4f.transform(this).getDirectionVector(Vector3f.up()).normalize();
+        return Matrix4f.transform(this).getDirectionVector(Vector3f.up()).normalized();
     }
 
     public void scale(float f) {

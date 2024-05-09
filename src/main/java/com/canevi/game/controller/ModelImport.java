@@ -1,9 +1,5 @@
 package com.canevi.game.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.canevi.engine.Playground;
 import com.canevi.engine.graphics.Mesh;
 import com.canevi.engine.graphics.Renderer;
@@ -12,6 +8,9 @@ import com.canevi.engine.maths.Transform;
 import com.canevi.engine.maths.Vector3f;
 import com.canevi.engine.objects.RenderableObject;
 import com.canevi.engine.utils.MeshExamples;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ModelImport {
     private Shader shader;
@@ -22,12 +21,9 @@ public class ModelImport {
         shader.create();
         renderer = new Renderer(shader);
 
-        List<Mesh> meshList = new ArrayList<>();
-        meshList.addAll(MeshExamples.watcher());
-        Playground.renderables.addAll(meshList.stream().map(mesh -> {
-            return new RenderableObject(null,
-                    new Transform(Vector3f.zero()), mesh, renderer);
-        }).collect(Collectors.toList()));
+        List<Mesh> meshList = new ArrayList<>(MeshExamples.watcher());
+        Playground.renderables.addAll(meshList.stream().map(mesh -> new RenderableObject(null,
+                new Transform(Vector3f.zero()), mesh, renderer)).toList());
 
         for (int i = 0; i < 100; i++) {
             Vector3f pos = Vector3f.randomPosition(40);
