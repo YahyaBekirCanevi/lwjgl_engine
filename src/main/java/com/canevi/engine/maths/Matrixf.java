@@ -20,6 +20,20 @@ public class Matrixf {
     }
 
     @Override
+    public String toString() {
+        String result = "";
+        int bound = elements.length;
+        for (int i = 0; i < bound; i++) {
+            String val = String.valueOf(elements[i]);
+            result += val + ", ";
+            if (i % m == m - 1) {
+                result += "\n";
+            }
+        }
+        return result;
+    }
+
+    @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;

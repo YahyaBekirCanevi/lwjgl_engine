@@ -10,6 +10,22 @@ import lombok.Setter;
 public class Vector3f {
 	private float x, y, z;
 
+	public static Vector3f min(Vector3f minExtents, Vector3f position) {
+		return new Vector3f(
+				Math.min(minExtents.getX(), position.getX()),
+				Math.min(minExtents.getY(), position.getY()),
+				Math.min(minExtents.getZ(), position.getZ())
+		);
+	}
+
+	public static Vector3f max(Vector3f maxExtents, Vector3f position) {
+		return new Vector3f(
+				Math.max(maxExtents.getX(), position.getX()),
+				Math.max(maxExtents.getY(), position.getY()),
+				Math.max(maxExtents.getZ(), position.getZ())
+		);
+	}
+
 	public Vector3f set(float x, float y, float z) {
 		this.x = x;
 		this.y = y;
@@ -111,7 +127,7 @@ public class Vector3f {
 		return x * other.x + y * other.y + z * other.z;
 	}
 
-	public Vector3f scale(Float length) {
+	public Vector3f scale(float length) {
 		return new Vector3f(x * length, y * length, z * length);
 	}
 
@@ -174,7 +190,7 @@ public class Vector3f {
 	}
 
 	public static Vector3f randomPosition(float magnitude) {
-		float range = magnitude - (-magnitude) + 1;
+		float range = magnitude + magnitude + 1;
 		float x = -magnitude + (float) Math.random() * range;
 		float y = -magnitude + (float) Math.random() * range;
 		float z = -magnitude + (float) Math.random() * range;
@@ -207,5 +223,10 @@ public class Vector3f {
 		if (Float.floatToIntBits(z) != Float.floatToIntBits(other.z))
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Vector3f{x=" + x +", y=" + y +", z=" + z +"}";
 	}
 }

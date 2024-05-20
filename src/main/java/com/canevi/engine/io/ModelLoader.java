@@ -1,16 +1,5 @@
 package com.canevi.engine.io;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import org.lwjgl.assimp.AIFace;
-import org.lwjgl.assimp.AIMesh;
-import org.lwjgl.assimp.AINode;
-import org.lwjgl.assimp.AIScene;
-import org.lwjgl.assimp.AIVector3D;
-import org.lwjgl.assimp.Assimp;
-
 import com.canevi.engine.enums.TextureFilterType;
 import com.canevi.engine.enums.TextureWrapType;
 import com.canevi.engine.graphics.Material;
@@ -20,8 +9,13 @@ import com.canevi.engine.graphics.Vertex;
 import com.canevi.engine.maths.Matrix4f;
 import com.canevi.engine.maths.Vector2f;
 import com.canevi.engine.maths.Vector3f;
-
 import lombok.extern.slf4j.Slf4j;
+import org.lwjgl.assimp.*;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Stream;
 
 @Slf4j
 public class ModelLoader {
@@ -120,20 +114,16 @@ public class ModelLoader {
 
 		for (int j = 0; j < faceCount; j++) {
 			AIFace face = indices.get(j);
+			int numIndices = face.mNumIndices();
+			Integer[] indicesArray = new Integer[numIndices];
 
-			indicesList.add(face.mIndices().get(0));
-			indicesList.add(face.mIndices().get(1));
-			indicesList.add(face.mIndices().get(2));
-			if (face.mNumIndices() == 4) {
-				indicesList.add(face.mIndices().get(0));
-				indicesList.add(face.mIndices().get(2));
-				indicesList.add(face.mIndices().get(3));
+			for (int k = 0; k < numIndices; k++) {
+				int index = face.mIndices().get(k);
+				indicesArray[k] = index;
 			}
+			indicesList.addAll(Stream.of(indicesArray).toList());
 		}
-		int[] indicesArray = new int[indicesList.size()];
-		for (int j = 0; j < indicesList.size(); j++) {
-			indicesArray[j] = indicesList.get(j);
-		}
+		int[] indicesArray = indicesList.stream().mapToInt(Integer::intValue).toArray();
 		Texture diffuseTexture = TextureLoader.getTexture(texturePath, shouldFlip,
 				TextureWrapType.REPEAT, TextureFilterType.LINEAR);
 		Material material = new Material(diffuseTexture, null, null);

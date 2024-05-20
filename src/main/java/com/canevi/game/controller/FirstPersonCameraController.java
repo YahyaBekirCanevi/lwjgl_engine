@@ -6,10 +6,8 @@ import com.canevi.engine.maths.Vector3f;
 import com.canevi.engine.objects.Camera;
 
 public class FirstPersonCameraController extends CameraController {
-    private final PlayerController playerController;
-    public FirstPersonCameraController(Camera camera, PlayerController playerController) {
+    public FirstPersonCameraController(Camera camera) {
         super(camera);
-        this.playerController = playerController;
     }
 
     @Override
@@ -17,17 +15,14 @@ public class FirstPersonCameraController extends CameraController {
         if (!camera.isOnFocus())
             return;
         look();
-        moveToPlayer();
     }
 
-    private void moveToPlayer() {
-    }
 
     private void look() {
         newMouse = Input.getMouse();
 
-        float dx = (float) (newMouse.getX() - oldMouse.getX());
-        float dy = (float) (newMouse.getY() - oldMouse.getY());
+        float dx = newMouse.getX() - oldMouse.getX();
+        float dy = newMouse.getY() - oldMouse.getY();
         Vector3f rotation = new Vector3f(-dy, -dx, 0);
         rotation = rotation.scale(mouseSensitivity);
         camera.getTransform().getRotation().add(rotation);

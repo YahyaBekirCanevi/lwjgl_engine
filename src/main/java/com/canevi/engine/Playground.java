@@ -1,16 +1,23 @@
 package com.canevi.engine;
 
-import java.util.ArrayList;
-import java.util.List;
-import org.lwjgl.glfw.GLFW;
-
+import com.canevi.engine.controller.LightController;
+import com.canevi.engine.graphics.Renderer;
+import com.canevi.engine.graphics.Shader;
 import com.canevi.engine.io.Input;
 import com.canevi.engine.io.Window;
-import com.canevi.engine.objects.Camera;
+import com.canevi.engine.maths.Transform;
+import com.canevi.engine.maths.Vector3f;
+import com.canevi.engine.objects.GameObject;
 import com.canevi.engine.objects.RenderableObject;
+import com.canevi.engine.objects.TObject;
 import com.canevi.engine.objects.ThreadObject;
+import com.canevi.engine.utils.MeshExamples;
 import com.canevi.game.controller.ModelImport;
 import com.canevi.game.controller.PlayerController;
+import org.lwjgl.glfw.GLFW;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Playground extends ThreadObject implements Runnable {
     public Playground() {
@@ -19,10 +26,10 @@ public class Playground extends ThreadObject implements Runnable {
 
     private Window window;
     private ModelImport modelImport;
-
-    public static List<ThreadObject> objects = new ArrayList<>();
-    public static List<RenderableObject> renderables = new ArrayList<>();
-
+    private List<TObject> objectList = new ArrayList<>();
+    private GameObject player;
+    private Shader shader;
+    private LightController lightController;
     public void start() {
         Thread thread = new Thread(this, name);
         thread.start();
@@ -39,6 +46,7 @@ public class Playground extends ThreadObject implements Runnable {
         while (!shouldDestroy && isEnabled) {
             onUpdate();
         }
+        onDestroy();
     }
 
     @Override
@@ -49,35 +57,48 @@ public class Playground extends ThreadObject implements Runnable {
         window.setBackgroundColor(0.1f, 0.2f, 0.3f);
         window.create();
 
-        modelImport = new ModelImport();
-        modelImport.importModels();
+        lightController = new LightController();
+        lightController.initialize();
 
-        objects.add(new PlayerController());
-        objects.forEach(ThreadObject::onStart);
+        shader = new Shader("shaders/mainVertex.glsl", "shaders/mainFragment.glsl");
+        shader.create();
+
+        modelImport = new ModelImport();
+
+        //objectList.addAll(modelImport.importModels(shader));
+        RenderableObject cube = new RenderableObject(new Transform(Vector3f.one().scale(20)),
+                MeshExamples.generateCube("textures/wooden-box.png"),new Renderer(shader));
+        objectList.add(cube);
+        RenderableObject cube2 = new RenderableObject(new Transform(Vector3f.right().scale(20)),
+                MeshExamples.generateCube("textures/wooden-box.png"),new Renderer(shader));
+        objectList.add(cube2);
+
+        player = new GameObject(new Transform(new Vector3f(0f, 0f, 0f)));
+        player.addComponent(new PlayerController());
+
+        objectList.add(player);
+
+        objectList.forEach(TObject::onStart);
     }
 
     @Override
     public void onUpdate() {
         if (window.shouldClose()) {
             interrupt();
-            objects.forEach(ThreadObject::interrupt);
             return;
         }
         window.update();
-        renderables.forEach(renderableObject -> renderableObject.render(Camera.getMainCamera()));
-        objects.forEach(ThreadObject::loop);
+        objectList.forEach(TObject::onUpdate);
         window.swapBuffers();
         playgroundControls();
     }
 
     @Override
     public void onDestroy() {
-        renderables.forEach(RenderableObject::destroy);
-        objects.forEach(ThreadObject::destroy);
-        objects.clear();
-        renderables.clear();
+        objectList.forEach(TObject::onDestroy);
+        objectList.clear();
         window.destroy();
-        modelImport.destroy();
+        shader.destroy();
     }
 
     public void playgroundControls() {

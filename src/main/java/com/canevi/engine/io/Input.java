@@ -1,13 +1,8 @@
 package com.canevi.engine.io;
 
-import lombok.Getter;
-import org.lwjgl.glfw.GLFW;
-import org.lwjgl.glfw.GLFWCursorPosCallback;
-import org.lwjgl.glfw.GLFWKeyCallback;
-import org.lwjgl.glfw.GLFWMouseButtonCallback;
-import org.lwjgl.glfw.GLFWScrollCallback;
-
 import com.canevi.engine.maths.Vector2f;
+import lombok.Getter;
+import org.lwjgl.glfw.*;
 
 public class Input {
 	private static boolean[] keys = new boolean[GLFW.GLFW_KEY_LAST];
@@ -30,19 +25,16 @@ public class Input {
 				keys[key] = (action != GLFW.GLFW_RELEASE);
 			}
 		};
-
 		mouseMove = new GLFWCursorPosCallback() {
 			public void invoke(long window, double xpos, double ypos) {
 				mouse = new Vector2f((float) xpos, (float) ypos);
 			}
 		};
-
 		mouseButtons = new GLFWMouseButtonCallback() {
 			public void invoke(long window, int button, int action, int mods) {
 				buttons[button] = (action != GLFW.GLFW_RELEASE);
 			}
 		};
-
 		mouseScroll = new GLFWScrollCallback() {
 			public void invoke(long window, double offsetx, double offsety) {
 				Vector2f offset = new Vector2f((float) offsetx, (float) offsety);

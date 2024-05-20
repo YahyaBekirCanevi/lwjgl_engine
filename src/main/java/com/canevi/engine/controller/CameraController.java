@@ -6,10 +6,9 @@ import com.canevi.engine.objects.Camera;
 
 public abstract class CameraController {
     protected Camera camera;
-    protected float horizontalAngle = 0, verticalAngle = 0;
     protected Vector2f oldMouse = new Vector2f(0, 0);
     protected Vector2f newMouse = new Vector2f(0, 0);
-    protected float moveSpeed = 0.1f, mouseSensitivity = 0.15f, distance = 2.0f;
+    protected float mouseSensitivity = 0.15f;
 
     public CameraController(Camera camera) {
         this.camera = camera;

@@ -1,10 +1,9 @@
 package com.canevi.engine.maths;
 
-import java.util.Arrays;
-
+import com.canevi.engine.objects.Camera;
 import org.lwjgl.assimp.AIMatrix4x4;
 
-import com.canevi.engine.objects.Camera;
+import java.util.Arrays;
 
 public class Matrix4f extends Matrixf {
 	public static final int SIZE = 4;
@@ -117,7 +116,7 @@ public class Matrix4f extends Matrixf {
 		Matrix4f rotationMatrix = Matrix4f.rotate(transform.getRotation());
 		Matrix4f scaleMatrix = Matrix4f.scale(transform.getScale());
 
-		return Matrix4f.multiply(translationMatrix, Matrix4f.multiply(rotationMatrix, scaleMatrix));
+		return Matrix4f.multiply(scaleMatrix, Matrix4f.multiply(translationMatrix, rotationMatrix));
 	}
 
 	public Vector3f translateVector3f(Vector3f vector) {

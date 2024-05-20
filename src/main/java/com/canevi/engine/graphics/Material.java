@@ -1,15 +1,13 @@
 package com.canevi.engine.graphics;
 
-import org.lwjgl.opengl.GL13;
-
 import com.canevi.engine.enums.TextureFilterType;
 import com.canevi.engine.enums.TextureWrapType;
 import com.canevi.engine.io.TextureLoader;
 import com.canevi.engine.maths.Vector3f;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.lwjgl.opengl.GL13;
 
 @Getter
 @Setter

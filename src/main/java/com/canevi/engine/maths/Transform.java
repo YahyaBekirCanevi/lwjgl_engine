@@ -36,4 +36,11 @@ public class Transform {
     public void scale(float f) {
         scale = scale.scale(f);
     }
+    @Override
+    public String toString() {
+        return "Transform{position=" +
+                position.toString() +", rotation=" +
+                rotation.toString() +", scale=" +
+                scale.toString() +"}";
+    }
 }

@@ -1,15 +1,13 @@
 package com.canevi.engine.graphics;
 
+import com.canevi.engine.maths.Matrix4f;
+import com.canevi.engine.maths.Transform;
+import com.canevi.engine.objects.Camera;
+import lombok.AllArgsConstructor;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL30;
-
-import com.canevi.engine.maths.Matrix4f;
-import com.canevi.engine.maths.Transform;
-import com.canevi.engine.objects.Camera;
-
-import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public class Renderer {

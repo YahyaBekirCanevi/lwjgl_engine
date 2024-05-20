@@ -1,16 +1,16 @@
 package com.canevi.engine.graphics;
 
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-
+import com.canevi.engine.maths.Vector3f;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryUtil;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
 @Getter
 @RequiredArgsConstructor
@@ -19,17 +19,27 @@ public class Mesh {
 	private final int[] indices;
 	private final Material material;
 	private int vao, pbo, ibo, cbo, tbo;
+	private Vector3f minExtents;
+	private Vector3f maxExtents;
 
 	public void create() {
+		minExtents = new Vector3f(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY);
+		maxExtents = new Vector3f(Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY);
+
 		vao = GL30.glGenVertexArrays();
 		GL30.glBindVertexArray(vao);
 
 		FloatBuffer positionBuffer = MemoryUtil.memAllocFloat(vertices.length * 3);
 		float[] positionData = new float[vertices.length * 3];
 		for (int i = 0; i < vertices.length; i++) {
-			positionData[i * 3] = vertices[i].getPosition().getX();
-			positionData[i * 3 + 1] = vertices[i].getPosition().getY();
-			positionData[i * 3 + 2] = vertices[i].getPosition().getZ();
+			Vector3f position = vertices[i].getPosition();
+			positionData[i * 3] = position.getX();
+			positionData[i * 3 + 1] = position.getY();
+			positionData[i * 3 + 2] = position.getZ();
+
+			// Update extents
+			minExtents = Vector3f.min(minExtents, position);
+			maxExtents = Vector3f.max(maxExtents, position);
 		}
 		positionBuffer.put(positionData);
 		positionBuffer.flip();

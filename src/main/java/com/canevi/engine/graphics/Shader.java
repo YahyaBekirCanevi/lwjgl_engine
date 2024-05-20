@@ -1,15 +1,14 @@
 package com.canevi.engine.graphics;
 
-import java.nio.FloatBuffer;
-
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL20;
-import org.lwjgl.system.MemoryUtil;
-
 import com.canevi.engine.maths.Matrix4f;
 import com.canevi.engine.maths.Vector2f;
 import com.canevi.engine.maths.Vector3f;
 import com.canevi.engine.utils.FileUtils;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL20;
+import org.lwjgl.system.MemoryUtil;
+
+import java.nio.FloatBuffer;
 
 public class Shader {
 	private String vertexFile, fragmentFile;

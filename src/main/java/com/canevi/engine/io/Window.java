@@ -1,16 +1,19 @@
 package com.canevi.engine.io;
 
+import com.canevi.engine.maths.Vector3f;
+import lombok.Getter;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 
-import com.canevi.engine.maths.Vector3f;
-
 public class Window {
+	@Getter
 	private int width, height;
+	@Getter
 	private String title;
+	@Getter
 	private long window;
 	private int frames;
 	private static long time;
@@ -119,19 +122,4 @@ public class Window {
 		}
 	}
 
-	public int getWidth() {
-		return width;
-	}
-
-	public int getHeight() {
-		return height;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public long getWindow() {
-		return window;
-	}
 }

@@ -1,10 +1,10 @@
 package com.canevi.engine.graphics;
 
-import java.nio.ByteBuffer;
-import org.lwjgl.opengl.GL11;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.lwjgl.opengl.GL11;
+
+import java.nio.ByteBuffer;
 
 @Getter
 @AllArgsConstructor

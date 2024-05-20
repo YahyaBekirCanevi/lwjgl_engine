@@ -1,20 +1,19 @@
 package com.canevi.engine.io;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
+import com.canevi.engine.enums.TextureFilterType;
+import com.canevi.engine.enums.TextureWrapType;
+import com.canevi.engine.graphics.Texture;
+import com.canevi.engine.utils.FileUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
 
-import com.canevi.engine.enums.TextureFilterType;
-import com.canevi.engine.enums.TextureWrapType;
-import com.canevi.engine.graphics.Texture;
-import com.canevi.engine.utils.FileUtils;
-
-import lombok.extern.slf4j.Slf4j;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 
 @Slf4j
 public class TextureLoader {
