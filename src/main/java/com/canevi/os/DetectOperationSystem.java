@@ -1,8 +1,9 @@
 package com.canevi.os;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Slf4j
 public class DetectOperationSystem {
+    private static final Logger log = LoggerFactory.getLogger(DetectOperationSystem.class);
     private static final String osName = System.getProperty("os.name").toLowerCase();
     private static final String osArch = System.getProperty("os.arch").toLowerCase();
 
@@ -56,7 +57,7 @@ public class DetectOperationSystem {
     }
 
     private static void executeMavenBuild(String profileId) {
-        String mavenCommand = "\nmvn clean package -P " + profileId + "\njava -jar .\\target\\lwjgl_engine-1.0-SNAPSHOT-shaded.jar  ";
+        String mavenCommand = "\nmvn clean package -P " + profileId + "\njava --enable-native-access=ALL-UNNAMED -jar .\\target\\LWJGL_Demo-shaded.jar";
         log.info(mavenCommand);
     }
 }

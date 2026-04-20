@@ -8,12 +8,13 @@ import com.canevi.graphics.Shader;
 import com.canevi.io.Window;
 import com.canevi.maths.Transform;
 
-import lombok.Getter;
-
-@Getter
 public class GameObject {
 	private Transform transform;
 	private List<Mesh> meshList;
+
+	public Transform getTransform() { return transform; }
+	public List<Mesh> getMeshList() { return meshList; }
+	
 	public Renderer renderer;
 	
 	public GameObject(Transform transform, List<Mesh> meshList, Window window, Shader shader) {

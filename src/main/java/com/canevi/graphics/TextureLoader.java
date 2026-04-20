@@ -13,10 +13,11 @@ import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
 import com.canevi.utils.FileUtils;
 
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Slf4j
 public class TextureLoader {
+    private static final Logger log = LoggerFactory.getLogger(TextureLoader.class);
 
     public static enum FilterType {
         NEAREST(GL11.GL_NEAREST), LINEAR(GL11.GL_LINEAR);

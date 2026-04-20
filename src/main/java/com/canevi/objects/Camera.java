@@ -6,19 +6,21 @@ import com.canevi.io.Input;
 import com.canevi.maths.Transform;
 import com.canevi.maths.Vector3f;
 
-import lombok.Getter;
-import lombok.Setter;
-
 public class Camera {
-	@Getter
 	private Transform transform;
-	@Getter
-	@Setter
 	private float moveSpeed = 0.05f, mouseSensitivity = 0.15f, distance = 2.0f;
 	private float horizontalAngle = 0, verticalAngle = 0;
 	private double oldMouseX = 0, oldMouseY = 0, newMouseX, newMouseY;
-	@Getter
 	private boolean onFocus = false;
+
+	public Transform getTransform() { return transform; }
+	public float getMoveSpeed() { return moveSpeed; }
+	public void setMoveSpeed(float moveSpeed) { this.moveSpeed = moveSpeed; }
+	public float getMouseSensitivity() { return mouseSensitivity; }
+	public void setMouseSensitivity(float mouseSensitivity) { this.mouseSensitivity = mouseSensitivity; }
+	public float getDistance() { return distance; }
+	public void setDistance(float distance) { this.distance = distance; }
+	public boolean isOnFocus() { return onFocus; }
 
 	public void setOnFocus(boolean onFocus) {
 		this.onFocus = onFocus;

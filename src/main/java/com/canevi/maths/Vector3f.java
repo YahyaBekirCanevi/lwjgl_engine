@@ -1,14 +1,21 @@
 package com.canevi.maths;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-
-@Getter
-@Setter
-@AllArgsConstructor
 public class Vector3f {
 	private float x, y, z;
+
+	public Vector3f(float x, float y, float z) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+	}
+
+	public float getX() { return x; }
+	public float getY() { return y; }
+	public float getZ() { return z; }
+
+	public void setX(float x) { this.x = x; }
+	public void setY(float y) { this.y = y; }
+	public void setZ(float z) { this.z = z; }
 	
 	public Vector3f set(float x, float y, float z) {
 		this.x = x;
@@ -139,19 +146,12 @@ public class Vector3f {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Vector3f other = (Vector3f) obj;
-		if (Float.floatToIntBits(x) != Float.floatToIntBits(other.x))
-			return false;
-		if (Float.floatToIntBits(y) != Float.floatToIntBits(other.y))
-			return false;
-		if (Float.floatToIntBits(z) != Float.floatToIntBits(other.z))
-			return false;
-		return true;
+		if (this == obj) return true;
+		if (obj instanceof Vector3f other) {
+			return Float.compare(x, other.x) == 0 &&
+				   Float.compare(y, other.y) == 0 &&
+				   Float.compare(z, other.z) == 0;
+		}
+		return false;
 	}
 }

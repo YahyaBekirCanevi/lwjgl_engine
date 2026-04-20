@@ -5,15 +5,6 @@ import org.lwjgl.opengl.GL13;
 
 import com.canevi.maths.Vector3f;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-
-@Getter
-@Setter
-@RequiredArgsConstructor
-@AllArgsConstructor
 public class Material {
 	public static enum TextureType {
 		DIFFUSE, NORMAL, EMMISION
@@ -25,6 +16,31 @@ public class Material {
 	private Vector3f color = new Vector3f(1, 1, 1);
 	private TextureLoader.FilterType filterType = TextureLoader.FilterType.LINEAR;
 	private TextureLoader.WrapType wrapType = TextureLoader.WrapType.REPEAT;
+
+	public Material(Texture diffusemap, Texture normalmap, Texture emmisionmap) {
+		this.diffusemap = diffusemap;
+		this.normalmap = normalmap;
+		this.emmisionmap = emmisionmap;
+	}
+
+	public Material(Texture diffusemap, Texture normalmap, Texture emmisionmap, Vector3f color, TextureLoader.FilterType filterType, TextureLoader.WrapType wrapType) {
+		this.diffusemap = diffusemap;
+		this.normalmap = normalmap;
+		this.emmisionmap = emmisionmap;
+		this.color = color;
+		this.filterType = filterType;
+		this.wrapType = wrapType;
+	}
+
+	public Texture getDiffusemap() { return diffusemap; }
+	public Texture getNormalmap() { return normalmap; }
+	public Texture getEmmisionmap() { return emmisionmap; }
+	public Vector3f getColor() { return color; }
+	public void setColor(Vector3f color) { this.color = color; }
+	public TextureLoader.FilterType getFilterType() { return filterType; }
+	public void setFilterType(TextureLoader.FilterType filterType) { this.filterType = filterType; }
+	public TextureLoader.WrapType getWrapType() { return wrapType; }
+	public void setWrapType(TextureLoader.WrapType wrapType) { this.wrapType = wrapType; }
 
 	public Material(boolean shouldFlip, EnumMap<TextureType, String> properties) {
 		String diffuse = properties.getOrDefault(TextureType.DIFFUSE, null);

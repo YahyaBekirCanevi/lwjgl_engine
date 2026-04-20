@@ -18,10 +18,11 @@ import com.canevi.graphics.Vertex;
 import com.canevi.maths.Vector2f;
 import com.canevi.maths.Vector3f;
 
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Slf4j
 public class ModelLoader {
+	private static final Logger log = LoggerFactory.getLogger(ModelLoader.class);
 	public static Mesh loadModel(String filePath, String texturePath, int meshIndex, boolean shouldFlip) {
 		String absolutePath = ResourceLoader.load(filePath);
 		/// aiImportFile fails on Windows if the path starts with a slash

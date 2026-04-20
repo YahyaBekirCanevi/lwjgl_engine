@@ -35,13 +35,13 @@ public class Main implements Runnable {
 		window = new Window(WIDTH, HEIGHT, "Game");
 		window.setBackgroundColor(0.1f, 0.2f, 0.3f);
 		camera = new Camera(new Transform(new Vector3f(0f, 0f, -50f), new Vector3f(0f, 90f, 0f)));
-		camera.setMoveSpeed(.1f);
+		camera.setMoveSpeed(.01f);
 
 		window.create();
 
 		shader = new Shader("shaders/mainVertex.glsl", "shaders/mainFragment.glsl");
 		shader.create();
-		List<Mesh> meshList = new ArrayList<>();
+		var meshList = new ArrayList<Mesh>();
 		// meshList.add(MeshExamples.generatePlane("sf/sea-keep-lonely-watcher/textures/texture_building.jpeg"));
 		// meshList.add(MeshExamples.watcherPart(0, 0));
 		meshList.addAll(MeshExamples.watcher());

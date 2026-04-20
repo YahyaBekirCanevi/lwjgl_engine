@@ -2,10 +2,11 @@ package com.canevi.io;
 
 import java.net.URL;
 
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Slf4j
 public class ResourceLoader {
+    private static final Logger log = LoggerFactory.getLogger(ResourceLoader.class);
     public static String load(String filePath) {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         URL resourceUrl = classLoader.getResource(filePath);

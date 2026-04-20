@@ -9,16 +9,21 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryUtil;
 
-import lombok.Getter;
-import lombok.Setter;
-
-@Getter
 public class Mesh {
 	private Vertex[] vertices;
 	private int[] indices;
-	@Setter
 	private Material material;
 	private int vao, pbo, ibo, cbo, tbo;
+
+	public Vertex[] getVertices() { return vertices; }
+	public int[] getIndices() { return indices; }
+	public Material getMaterial() { return material; }
+	public void setMaterial(Material material) { this.material = material; }
+	public int getVao() { return vao; }
+	public int getPbo() { return pbo; }
+	public int getIbo() { return ibo; }
+	public int getCbo() { return cbo; }
+	public int getTbo() { return tbo; }
 
 	public Mesh(Vertex[] vertices, int[] indices, Material material) {
 		this.vertices = vertices;

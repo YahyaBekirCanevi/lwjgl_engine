@@ -10,11 +10,11 @@
 	<packaging>jar</packaging>
 
 	<properties>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
-		<lwjgl.version>3.2.3</lwjgl.version>
-		<slf4j.version>2.0.9</slf4j.version>
-		<lombok.version>1.18.24</lombok.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>25</maven.compiler.source>
+		<maven.compiler.target>25</maven.compiler.target>
+		<lwjgl.version>3.3.4</lwjgl.version>
+		<slf4j.version>2.0.12</slf4j.version>
 	</properties>
 
 	<profiles>
@@ -93,6 +93,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.4.1</version>
 				<configuration>
 					<excludes>
 						<exclude>**/log4j.properties</exclude>
@@ -108,8 +109,17 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.13.0</version>
+				<configuration>
+					<source>${maven.compiler.source}</source>
+					<target>${maven.compiler.target}</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.2.4</version>
+				<version>3.5.0</version>
 				<executions>
 					<execution>
 						<phase>package</phase>
@@ -128,13 +138,6 @@
 	</build>
 
 	<dependencies>
-
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<version>${lombok.version}</version>
-		</dependency>
-
 
 		<dependency>
 			<groupId>org.slf4j</groupId>

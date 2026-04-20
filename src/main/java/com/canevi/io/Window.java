@@ -44,7 +44,7 @@ public class Window {
 			return;
 		}
 		
-		GLFWVidMode videoMode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
+		var videoMode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
 		windowPosX[0] = (videoMode.width() - width) / 2;
 		windowPosY[0] = (videoMode.height() - height) / 2;
 		GLFW.glfwSetWindowPos(window, windowPosX[0], windowPosY[0]);
@@ -62,13 +62,11 @@ public class Window {
 	}
 	
 	private void createCallbacks() {
-		sizeCallback = new GLFWWindowSizeCallback() {
-			public void invoke(long window, int w, int h) {
-				width = w;
-				height = h;
-				isResized = true;
-			}
-		};
+		sizeCallback = GLFWWindowSizeCallback.create((window, w, h) -> {
+			width = w;
+			height = h;
+			isResized = true;
+		});
 		
 		GLFW.glfwSetKeyCallback(window, input.getKeyboardCallback());
 		GLFW.glfwSetCursorPosCallback(window, input.getMouseMoveCallback());
